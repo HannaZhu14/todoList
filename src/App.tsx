@@ -75,6 +75,14 @@ function App() {
         }
     }
 
+    function onChangeTodoListTitle(todoListId: string, newTitle: string) {
+        const todolist = todoLists.find(tl => tl.id === todoListId)
+        if (todolist) {
+            todolist.title = newTitle;
+            setTodoLists([...todoLists])
+        }
+    }
+
 
     function removeTodoList(todoListId: string) {
         let filteredTL = todoLists.filter(tl => tl.id !== todoListId)
@@ -99,7 +107,7 @@ function App() {
             <AddItemForm addItem={addTodoList}/>
             {todoLists.map(tl => {
 
-                let taskForTodoList = tasksObj[tl.id];
+                let taskForTodoList = tasksObj[tl.id]
                 if (tl.filter === 'active') {
                     taskForTodoList = taskForTodoList.filter(t => !t.isDone)
                 }
@@ -119,6 +127,7 @@ function App() {
                     changeStatus={changeStatus}
                     removeTodoList={removeTodoList}
                     changeTaskTitle={changeTaskTitle}
+                    onChangeTodoListTitle={onChangeTodoListTitle}
                 />
             })}
         </div>
