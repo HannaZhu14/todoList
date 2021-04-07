@@ -1,4 +1,6 @@
 import React, {KeyboardEvent, ChangeEvent, useState} from 'react';
+import {IconButton, TextField} from '@material-ui/core';
+import { PlaylistAddRounded} from '@material-ui/icons';
 
 
 export type AddItemFormPropsType = {
@@ -8,12 +10,12 @@ export type AddItemFormPropsType = {
 function AddItemForm(props: AddItemFormPropsType) {
 
     const [newTaskTitle, setNewTaskTitle] = useState('')
-    const [error, setError] = useState<boolean>(false)
+    const [error, setError] = useState<boolean | string>(false)
     const addTask = () => {
         if (newTaskTitle.trim() !== '') {
             props.addItem(newTaskTitle.trim())
             setNewTaskTitle('')
-        } else setError(true)
+        } else setError('Title is required')
 
     }
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,14 +31,21 @@ function AddItemForm(props: AddItemFormPropsType) {
     return (
 
         <div>
-            <input
+            <TextField
+                variant={'outlined'}
+                label={'Type value'}
                 value={newTaskTitle}
                 onChange={onChangeHandler}
                 onKeyPress={onKeyPressHandler}
-                className={error ? 'error' : ''}
+                error={!!error}
+                helperText={error}
             />
-            <button onClick={addTask}>+</button>
-            {error ? <div className={'error-message'}>Title id required!</div> : false}
+            <IconButton onClick={addTask}
+                // variant={'contained'}
+                color={'primary'}
+            ><PlaylistAddRounded fontSize={'large'}
+                                 color={'primary'}
+            /></IconButton>
         </div>
 
     );
