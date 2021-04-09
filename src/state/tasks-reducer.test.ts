@@ -1,5 +1,6 @@
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './tasks-reducer';
 import {TasksStateType} from '../App';
+import {addTodoListAC, removeTodoListAC} from './todolist-reducer';
 
 let startState: TasksStateType = {};
 
@@ -77,3 +78,37 @@ test('title of specified task should be changed', () => {
     expect(endState['todolistId2'][1].title).toBe('salt')
 
 });
+
+test('new property with new array should be added when new todolist is added', () => {
+
+    const action = addTodoListAC("new todolist");
+
+    const endState = tasksReducer(startState, action)
+
+
+    const keys = Object.keys(endState);
+    const newKey = keys.find(k => k != "todolistId1" && k != "todolistId2");
+    if (!newKey) {
+        throw Error("new key should be added")
+    }
+
+    expect(keys.length).toBe(3);
+    expect(endState[newKey]).toEqual([]);
+});
+
+
+test('property with todolistId should be deleted', () => {
+
+    const action = removeTodoListAC("todolistId2");
+
+    const endState = tasksReducer(startState, action)
+
+
+    const keys = Object.keys(endState);
+
+    expect(keys.length).toBe(1);
+    expect(endState["todolistId2"]).toBeUndefined();
+});
+
+
+

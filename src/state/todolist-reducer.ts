@@ -2,13 +2,14 @@ import {FilterTaskType, TodoListType} from '../App';
 import {v1} from 'uuid';
 
 type ActionType = removeTodoListType | addTodoListType | changeTodoListTitleType | changeTodoListFilterType
-type removeTodoListType = {
+export type removeTodoListType = {
     type: 'REMOVE-TODOLIST',
     id: string
 }
-type addTodoListType = {
+export type addTodoListType = {
     type: 'ADD-TODOLIST',
     title: string
+    todolistId: string
 }
 type changeTodoListTitleType = {
     type: 'CHANGE-TODOLIST-TITLE',
@@ -21,18 +22,26 @@ type changeTodoListFilterType = {
     filter: FilterTaskType
 }
 
-export const todolistReducer = (state: Array<TodoListType>, action: ActionType): Array<TodoListType> => {
+export const todoListId1 = v1();
+export const todoListId2 = v1();
+
+const initialState: Array<TodoListType> = [
+    {id: todoListId1, title: 'What to learn', filter: 'all'},
+    {id: todoListId2, title: 'What to buy', filter: 'active'},
+]
+
+export const todolistsReducer = (state: Array<TodoListType> = initialState, action: ActionType): Array<TodoListType> => {
     switch (action.type) {
         case 'REMOVE-TODOLIST': {
             return state.filter(tl => tl.id !== action.id)
         }
         case 'ADD-TODOLIST': {
             let todolist: TodoListType = {
-                id: v1(),
+                id: action.todolistId,
                 title: action.title,
                 filter: 'all'
             }
-            return [...state, todolist]
+            return [todolist, ...state]
         }
         case 'CHANGE-TODOLIST-TITLE': {
             const todolist = state.find(tl => tl.id === action.id)
@@ -49,7 +58,7 @@ export const todolistReducer = (state: Array<TodoListType>, action: ActionType):
             return [...state]
         }
         default:
-            throw new Error('I don\'t understand this type')
+            return state;
     }
 }
 
@@ -63,7 +72,8 @@ export const removeTodoListAC = (id: string): removeTodoListType => {
 export const addTodoListAC = (title: string): addTodoListType => {
     return {
         type: 'ADD-TODOLIST',
-        title
+        title,
+        todolistId: v1()
     } as const
 }
 
