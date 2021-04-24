@@ -15,13 +15,13 @@ import {
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './state/tasks-reducer';
 
 
-export type FilterTaskType = 'all' | 'active' | 'completed';
-export type TodoListType = {
+ type FilterTaskType = 'all' | 'active' | 'completed';
+ type TodoListType = {
     id: string
     title: string
     filter: FilterTaskType
 }
-export type TasksStateType = {
+ type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
@@ -145,4 +145,4 @@ function AppWithReducers() {
     );
 }
 
-export default AppWithReducers;
+// export default AppWithReducers;

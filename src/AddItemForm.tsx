@@ -7,10 +7,13 @@ export type AddItemFormPropsType = {
     addItem: (title: string) => void
 }
 
-function AddItemForm(props: AddItemFormPropsType) {
+const AddItemForm = React.memo((props: AddItemFormPropsType) => {
+
+    console.log('AddItemForm is called')
 
     const [newTaskTitle, setNewTaskTitle] = useState('')
-    const [error, setError] = useState<boolean | string>(false)
+    const [error, setError] = useState<null | string>('')
+
     const addTask = () => {
         if (newTaskTitle.trim() !== '') {
             props.addItem(newTaskTitle.trim())
@@ -21,8 +24,11 @@ function AddItemForm(props: AddItemFormPropsType) {
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setNewTaskTitle(e.currentTarget.value)
     }
+
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(false)
+        if (error !== null) {
+            setError(null)
+        }
         if (e.charCode === 13) {
             addTask();
         }
@@ -42,13 +48,13 @@ function AddItemForm(props: AddItemFormPropsType) {
             />
             <IconButton onClick={addTask}
                 // variant={'contained'}
-                color={'primary'}
+                        color={'primary'}
             ><PlaylistAddRounded fontSize={'large'}
                                  color={'primary'}
             /></IconButton>
         </div>
 
     );
-}
+});
 
 export default AddItemForm;

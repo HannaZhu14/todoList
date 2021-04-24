@@ -1,9 +1,9 @@
-import React, {ChangeEvent} from 'react';
-import {FilterTaskType} from '../App';
+import React, {ChangeEvent, useCallback} from 'react';
 import AddItemForm from '../AddItemForm';
 import {EditableSpan} from './EditableSpan';
 import {Button, Checkbox, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
+import {FilterTaskType} from '../state/AppWithRedux';
 
 type PropsType = {
     title: string
@@ -25,25 +25,37 @@ export type TaskType = {
     isDone: boolean
 }
 
-function TodoList(props: PropsType) {
+const TodoList = React.memo((props: PropsType) => {
+
+    console.log('TodoList is called')
 
     const onAllClickHandler = () => {
-        props.changeFilter(props.todoListId,'all' )
+        props.changeFilter(props.todoListId, 'all')
     }
     const onActiveClickHandler = () => {
-        props.changeFilter(props.todoListId,'active' )
+        props.changeFilter(props.todoListId, 'active')
     }
     const onCompletedClickHandler = () => {
-        props.changeFilter(props.todoListId,'completed' )
+        props.changeFilter(props.todoListId, 'completed')
     }
     const removeTodoList = () => {
         props.removeTodoList(props.todoListId)
     }
-    const addTask = (title: string) => {
+    const addTask = useCallback((title: string) => {
         props.addTask(title, props.todoListId)
-    }
+    }, [])
+
     const onChangeTodoListTitle = (title: string) => {
         props.onChangeTodoListTitle(props.todoListId, title)
+    }
+
+
+    let taskForTodoList = props.task
+    if (props.filter === 'active') {
+        taskForTodoList = props.task.filter(t => !t.isDone)
+    }
+    if (props.filter === 'completed') {
+        taskForTodoList = props.task.filter(t => t.isDone)
     }
 
 
@@ -56,7 +68,7 @@ function TodoList(props: PropsType) {
             </h3>
             <AddItemForm addItem={addTask}/>
             <div>
-                {props.task.map(t => {
+                {taskForTodoList.map(t => {
 
                     const onClickHandler = () => {
                         props.removeTask(t.id, props.todoListId)
@@ -95,7 +107,7 @@ function TodoList(props: PropsType) {
             </div>
         </div>
     );
-}
+});
 
 export default TodoList;
 
